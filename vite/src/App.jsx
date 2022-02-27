@@ -1,45 +1,71 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { Component } from "react";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const generateIds = () => {
+  let count = 0;
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
+  return () => {
+    count += 1;
+
+    return count;
+  };
+};
+
+const getId = generateIds();
+
+class App extends Component {
+  state = {
+    inputValue: "",
+    todoList: [],
+  };
+
+  handleFormInputChange = (e) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      inputValue: e.target.value,
+    }));
+  };
+
+  handleTodoFormSubmit = (e) => {
+    e.preventDefault();
+
+    const listItem = {
+      text: this.state.inputValue,
+      id: getId(),
+    };
+
+    this.setState((prevState) => ({
+      ...prevState,
+      todoList: [...prevState.todoList, listItem],
+      inputValue: "",
+    }));
+  };
+
+  render() {
+    return (
+      <div className="app">
+        <form onSubmit={this.handleTodoFormSubmit}>
+          <input
+            type="text"
+            value={this.state.inputValue}
+            onChange={this.handleFormInputChange}
+          />
+          <button className="add">Add</button>
+        </form>
+
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
+          <h2>Todo list</h2>
+          <ul className="todoList">
+            {this.state.todoList.map((item) => (
+              <li key={item.id}>{item.text}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default App
+export default App;
