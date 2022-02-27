@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, useState } from "react";
 import "./App.css";
 
 const generateIds = () => {
@@ -13,59 +13,48 @@ const generateIds = () => {
 
 const getId = generateIds();
 
-class App extends Component {
-  state = {
-    inputValue: "",
-    todoList: [],
+function App() {
+  const [inputValue, setInputValue] = useState("");
+  const [todoList, setTodoList] = useState([]);
+
+  const handleFormInputChange = (e) => {
+    setInputValue(e.target.value);
   };
 
-  handleFormInputChange = (e) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      inputValue: e.target.value,
-    }));
-  };
-
-  handleTodoFormSubmit = (e) => {
+  const handleTodoFormSubmit = (e) => {
     e.preventDefault();
 
     const listItem = {
-      text: this.state.inputValue,
+      text: inputValue,
       id: getId(),
     };
 
-    this.setState((prevState) => ({
-      ...prevState,
-      todoList: [...prevState.todoList, listItem],
-      inputValue: "",
-    }));
+    setTodoList((prevState) => [...prevState, listItem]);
+    setInputValue("");
   };
 
-  render() {
-    return (
-      <div className="app">
-        <form onSubmit={this.handleTodoFormSubmit}>
-          <input
-            type="text"
-            value={this.state.inputValue}
-            onChange={this.handleFormInputChange}
-          />
-          <button className="add">Add</button>
-        </form>
+  return (
+    <div className="app">
+      <form className="todoForm" onSubmit={handleTodoFormSubmit}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleFormInputChange}
+          className="todoForm-input"
+        />
+        <button className="add">Add</button>
+      </form>
 
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-        >
-          <h2>Todo list</h2>
-          <ul className="todoList">
-            {this.state.todoList.map((item) => (
-              <li key={item.id}>{item.text}</li>
-            ))}
-          </ul>
-        </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        <h2>Todo list</h2>
+        <ul className="todoList">
+          {todoList.map((item) => (
+            <li key={item.id}>{item.text}</li>
+          ))}
+        </ul>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default App;

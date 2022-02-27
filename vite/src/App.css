@@ -5,15 +5,30 @@
   margin: 1rem;
 }
 
-input {
-  border: 1px solid red;
+.todoForm-input {
   font: 1.2rem;
   outline: none;
   padding: 5px;
+  height: 30px;
+  border: none;
 }
 
 .add {
-  border: 1px solid red;
   background-color: transparent;
   padding: 5px;
+  border: none;
+  background-color: brown;
+  height: 100%;
+  min-width: 70px;
+  border-radius: 0 5px 5px 0;
+  color: white;
+}
+
+.todoForm {
+  --border-radius: rgba(75, 75, 75, 0.329);
+  height: 35px;
+  border-radius: 5px;
+  outline: none;
+  box-shadow: 2px 2px 2px var(--border-radius),
+    -2px -2px 2px var(--border-radius);
 }
