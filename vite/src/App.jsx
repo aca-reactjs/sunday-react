@@ -1,17 +1,9 @@
 import { Component, useState } from "react";
+import TodoForm from "./components/TodoForm/TodoForm";
+import getId from "./util/generate.util";
+import TodoList from "./components/TodoList/TodoList";
+
 import "./App.css";
-
-const generateIds = () => {
-  let count = 0;
-
-  return () => {
-    count += 1;
-
-    return count;
-  };
-};
-
-const getId = generateIds();
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -27,32 +19,54 @@ function App() {
     const listItem = {
       text: inputValue,
       id: getId(),
+      isEditMode: false,
     };
 
     setTodoList((prevState) => [...prevState, listItem]);
     setInputValue("");
   };
 
+  const handleListItemClick = (id) => () => {
+    const editedList = todoList.map((item) =>
+      item.id === id
+        ? { ...item, isEditMode: true }
+        : { ...item, isEditMode: false }
+    );
+
+    setTodoList(editedList);
+  };
+
+  const handleListItemChange = (id) => (e) => {
+    const editedList = todoList.map((item) =>
+      item.id === id ? { ...item, text: e.target.value } : item
+    );
+
+    setTodoList(editedList);
+  };
+
+  const handleListItemFormSubmit = (id) => (e) => {
+    e.preventDefault();
+
+    const editedList = todoList.map((item) =>
+      item.id === id ? { ...item, isEditMode: false } : item
+    );
+
+    setTodoList(editedList);
+  };
+
   return (
     <div className="app">
-      <form className="todoForm" onSubmit={handleTodoFormSubmit}>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleFormInputChange}
-          className="todoForm-input"
-        />
-        <button className="add">Add</button>
-      </form>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-        <h2>Todo list</h2>
-        <ul className="todoList">
-          {todoList.map((item) => (
-            <li key={item.id}>{item.text}</li>
-          ))}
-        </ul>
-      </div>
+      <TodoForm
+        inputValue={inputValue}
+        onInputChange={handleFormInputChange}
+        onFormSubmit={handleTodoFormSubmit}
+      />
+      <TodoList
+        todoList={todoList}
+        onListItemClick={handleListItemClick}
+        onListItemChange={handleListItemChange}
+        onListItemFormSubmit={handleListItemFormSubmit}
+      />
     </div>
   );
 }
