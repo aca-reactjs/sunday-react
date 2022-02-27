@@ -1,4 +1,20 @@
 .todoList-item {
   list-style: none;
   margin-bottom: 8px;
+  font-size: var(--default-font-size);
+}
+
+.todoList-header {
+  font-size: 30px;
+  color: brown;
+  text-shadow: 1px 0 1px black;
+}
+
+.todoListItem-input {
+  font-size: var(--default-font-size);
+  max-width: 130px;
+}
+
+.todoItem-delete {
+  cursor: pointer;
 }
